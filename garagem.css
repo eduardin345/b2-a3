@@ -1,0 +1,213 @@
+/* Reset Básico e Configurações Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Cores e Fontes CLEAN */
+:root {
+    --clean-bg: #f4f7f6; /* Cinza muito claro */
+    --clean-container-bg: #ffffff; /* Branco */
+    --clean-text: #333333; /* Cinza escuro */
+    --clean-text-secondary: #555555; /* Cinza médio */
+    --clean-primary: #4a90e2; /* Azul suave */
+    --clean-secondary: #6c757d; /* Cinza secundário */
+    --clean-success: #5cb85c; /* Verde */
+    --clean-danger: #d9534f; /* Vermelho */
+    --clean-warning: #f0ad4e; /* Laranja/Amarelo */
+    --clean-border: #dee2e6; /* Cor de borda clara */
+
+    /* Use system fonts ou a fonte do Google Fonts */
+    --font-family: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--clean-bg);
+    color: var(--clean-text);
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Container Principal */
+.container {
+    max-width: 760px;
+    margin: 30px auto;
+    background-color: var(--clean-container-bg);
+    padding: 30px 40px;
+    border-radius: 8px; /* Cantos suavemente arredondados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra muito sutil */
+    text-align: center;
+}
+
+/* Títulos */
+h1 {
+    font-size: 2em;
+    color: var(--clean-text);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.6em;
+    color: var(--clean-text-secondary);
+    margin-bottom: 30px;
+    font-weight: 400; /* Mais leve que h1 */
+}
+
+/* Linha Horizontal */
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--clean-border);
+    margin: 25px 0;
+}
+
+/* Link de Navegação */
+.navigation-link {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+/* Área de Mensagens */
+.message-area {
+    margin: 15px 0 25px 0;
+    padding: 15px;
+    background-color: #e7f3fe; /* Fundo azul claro para info */
+    border: 1px solid #bde0fe;
+    color: #0c5464;
+    border-radius: 6px;
+    text-align: left;
+}
+/* Adicione .success, .error se precisar */
+.message-area.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+
+/* Estilo Base das Telas */
+.tela {
+    display: none;
+    padding: 10px 0;
+    animation: fadeInSimple 0.4s ease-out;
+}
+.tela-ativa { display: block; }
+
+/* Imagens dos Veículos */
+.vehicle-image {
+    max-width: 60%;
+    height: auto;
+    margin: 0 auto 25px auto;
+    display: block;
+    border-radius: 6px;
+    border: 1px solid var(--clean-border); /* Borda sutil */
+}
+
+/* Área de Informação */
+.info-box {
+    background-color: #f8f9fa; /* Cinza muito claro */
+    border: 1px solid var(--clean-border);
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    text-align: center; /* Pode ser left se preferir */
+    min-height: 50px;
+    color: var(--clean-text-secondary);
+}
+.info-box p { margin: 5px 0; }
+
+/* Grupo de Botões */
+.button-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px; /* Espaço entre botões */
+    margin-bottom: 20px;
+}
+
+/* Estilo Base dos Botões */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espaço ícone/texto */
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px; /* Mesma borda dos outros elementos */
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: 0.95em;
+    font-weight: 600; /* Levemente mais pesado */
+    color: white; /* Texto branco na maioria */
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 130px; /* Largura mínima */
+}
+
+.button:hover {
+    filter: brightness(95%); /* Escurece levemente */
+    transform: translateY(-1px); /* Leve elevação */
+}
+
+.button:active {
+    transform: translateY(0);
+    filter: brightness(90%);
+}
+
+/* Cores dos Botões */
+.button-primary { background-color: var(--clean-primary); }
+.button-secondary { background-color: var(--clean-secondary); }
+.button-success { background-color: var(--clean-success); }
+.button-danger { background-color: var(--clean-danger); }
+.button-warning { background-color: var(--clean-warning); color: var(--clean-text); /* Texto escuro no amarelo */ }
+
+
+/* Seção de Carga do Caminhão */
+.cargo-section {
+    margin: 25px 0;
+    padding: 15px;
+    background-color: #f8f9fa; /* Mesmo fundo da info-box */
+    border: 1px solid var(--clean-border);
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.cargo-section label {
+    font-weight: 600;
+    color: var(--clean-text-secondary);
+    margin-right: 5px;
+}
+
+.cargo-section input[type="number"] {
+    padding: 8px 10px;
+    border: 1px solid var(--clean-border);
+    border-radius: 4px;
+    max-width: 90px;
+    text-align: right;
+    font-family: var(--font-family);
+    font-size: 1em;
+}
+.cargo-section input[type="number"]:focus {
+    outline: none;
+    border-color: var(--clean-primary);
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2); /* Foco sutil */
+}
+
+/* Animação de entrada simples */
+@keyframes fadeInSimple {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilo para ícones (se usados) */
+.button i {
+    font-size: 0.9em; /* Ajusta tamanho do ícone */
+    margin-right: 3px; /* Pequeno espaço extra se o gap não for suficiente */
+}

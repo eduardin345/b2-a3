@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garagem Hiperconectada - Previsão do Tempo</title>
+    <!-- Link para o SEU style.css existente -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Adicione o CSS específico da previsão, se necessário, ou integre-o ao seu style.css -->
+    <style>
+        /* ESTILOS ESPECÍFICOS PARA PREVISÃO DO TEMPO (se não estiverem no style.css principal) */
+        /* Cole aqui os estilos da previsão que te passei, como .container-previsao-dias, .dia-previsao-item, etc. */
+        /* Ou, melhor ainda, adicione-os diretamente ao seu style.css */
+        #previsao-tempo-page-container { /* Novo container para a página de previsão */
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #previsao-tempo-page-container header h1 {
+            color: #3498db; /* Ajuste para combinar com seu estilo se necessário */
+        }
+
+        #busca-clima {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        #cidade-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em; /* Consistência */
+        }
+
+        #verificar-clima-btn {
+            padding: 10px 15px; /* Consistência com seus botões */
+            /* A cor já deve vir do seu style.css geral para botões */
+        }
+
+        #loading {
+            text-align: center;
+            margin: 20px;
+            font-style: italic;
+            color: #555;
+        }
+        #error-message {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0 20px 0; /* Adicionado margin bottom */
+            border: 1px solid #ef9a9a;
+            text-align: center;
+        }
+
+        #previsao-tempo-resultado h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .container-previsao-dias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+        }
+
+        .dia-previsao-item {
+            background-color: #000000;
+            border: 1px solid #bdc3c7;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            min-width: 130px;
+            flex: 1;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .dia-previsao-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .dia-previsao-item h3 {
+            margin-top: 0;
+            font-size: 1.1em;
+            color: #ffffff;
+        }
+
+        .dia-previsao-item img {
+            width: 50px;
+            height: 50px;
+            margin: 5px 0;
+        }
+
+        .dia-previsao-item .temperaturas {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .dia-previsao-item .temp-max {
+            color: #ff5947;
+        }
+        .dia-previsao-item .temp-min {
+            color: #89d0ff;
+        }
+        .dia-previsao-item .descricao-tempo {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            text-transform: capitalize;
+            min-height: 30px; /* Para evitar que o card mude de altura com descrições diferentes */
+        }
+
+        #conselhos-garagem {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        #conselhos-garagem h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #conselhos-garagem ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        #conselhos-garagem li {
+            background-color: #e8f6fd;
+            border-left: 4px solid #3498db;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        footer { /* Para manter o estilo do rodapé da página de previsão */
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .botao-navegacao { /* Pega do seu CSS se estiver lá, senão define aqui */
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 15px 0;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .botao-navegacao:hover {
+            background-color: #5a6268;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="previsao-tempo-page-container">
+        <header>
+            <!-- BOTÃO DE NAVEGAÇÃO para voltar para a página principal de gerenciamento -->
+            <a href="garagem.HTML" class="botao-navegacao">⬅️ Voltar ao Gerenciamento de Veículos</a>
+
+      
+            <hr>
+            <h1>Garagem Hiperconectada: Previsão do Tempo</h1>
+            <p>Planeje suas atividades e viagens com a previsão do tempo detalhada!</p>
+        </header>
+
+        <main>
+            <section id="busca-clima">
+                <input type="text" id="cidade-input" placeholder="Digite o nome da cidade">
+                <button id="verificar-clima-btn" class="button">Ver Previsão (3 Dias)</button>
+            </section>
+
+            <div id="loading" style="display:none;">Carregando...</div>
+            <div id="error-message" style="display:none;"></div>
+
+            <section id="previsao-tempo-resultado">
+                <!-- Resultados da previsão serão inseridos aqui -->
+            </section>
+
+            <section id="conselhos-garagem">
+                <!-- Conselhos da garagem serão inseridos aqui -->
+            </section>
+        </main>
+
+        <footer>
+            <p>Previsão do tempo fornecida por OpenWeatherMap</p>
+            <p style="font-size: 0.8em; color: #777;">
+                <strong>Atenção:</strong> A chave da API OpenWeatherMap está no código frontend para fins didáticos.
+                Em um ambiente de produção, isso NUNCA deve ser feito. Use um backend como proxy.
+            </p>
+        </footer>
+    </div> <!-- Fim de #previsao-tempo-page-container -->
+
+    <!-- Script da previsão do tempo -->
+    <script src="previsao_tempo_script.js"></script>
+</body>
+</html>

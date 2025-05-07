@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Veículos - Clean</title>
+    <!-- Google Fonts (Opcional, ou use system fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Ícones (Font Awesome - Opcional, para simplicidade) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Nosso CSS Estilizado -->
+    <link rel="stylesheet" href="garagem.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Simulador de Veículos</h1>
+
+        <hr>
+
+        <div id="mensagem" class="message-area" style="display: none;"></div>
+
+        <!-- Tela Principal (Garagem) -->
+        <div id="telaPrincipal" class="tela tela-ativa">
+            <h2>Escolha um Veículo</h2>
+            <div class="button-group">
+                <button id="irParaCarro" class="button button-primary">Carro</button>
+                <button id="irParaEsportivo" class="button button-primary">Carro Esportivo</button>
+                <button id="irParaCaminhao" class="button button-primary">Caminhão</button>
+            </div>
+        </div>
+
+        <!-- Tela do Carro -->
+        <div id="telaCarro" class="tela">
+            <h2>Carro</h2>
+            <img src="img/images.jpg" alt="Imagem de um Carro" class="vehicle-image">
+            <div id="infoCarro" class="info-box">Status: Desligado</div>
+            <div class="button-group">
+                <button id="ligarCarro" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
+                <button id="desligarCarro" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
+                <button id="acelerarCarro" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
+                <button id="buzinarCarro" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
+                <div class="navigation-link">
+                    <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
+               </div>
+            </div>
+            <div class="button-group">
+                <button id="voltarParaGaragemCarro" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+        </div>
+
+        <!-- Tela do Carro Esportivo -->
+        <div id="telaEsportivo" class="tela">
+            <h2>Carro Esportivo</h2>
+            <img src="img/png-transparent-ford-gt-shelby-mustang-california-special-mustang-2018-ford-mustang-gt-premium-ford-car-performance-car-vehicle.png" alt="Imagem de um Carro Esportivo" class="vehicle-image">
+            <div id="infoEsportivo" class="info-box">Status: Desligado</div>
+            <div class="button-group">
+                 <button id="ligarEsportivo" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
+                <button id="desligarEsportivo" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
+                <button id="acelerarEsportivo" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
+                <button id="buzinarEsportivo" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
+                <button id="ativarTurbo" class="button button-warning"><i class="fas fa-fire"></i> Ativar Turbo</button>
+                <button id="desativarTurbo" class="button button-secondary">Desativar Turbo</button>
+                <div class="navigation-link">
+                    <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
+               </div>
+            </div>
+             <div class="button-group">
+                <button id="voltarParaGaragemEsportivo" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+        </div>
+
+        <!-- Tela do Caminhão -->
+        <div id="telaCaminhao" class="tela">
+            <h2>Caminhão</h2>
+            <img src="img/images%20(1).jpg" alt="Imagem de um Caminhão" class="vehicle-image">
+            <div id="infoCaminhao" class="info-box">Status: Desligado</div>
+             <div class="button-group">
+                 <button id="ligarCaminhao" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
+                <button id="desligarCaminhao" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
+                <button id="acelerarCaminhao" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
+                <button id="buzinarCaminhao" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
+            </div>
+            <div class="cargo-section">
+                <label for="pesoCarga">Peso da Carga (kg):</label>
+                <input type="number" id="pesoCarga" placeholder="0">
+                <button id="carregarCaminhao" class="button button-warning"><i class="fas fa-truck-loading"></i> Carregar</button>
+            </div>
+             <div class="button-group">
+                <button id="voltarParaGaragemCaminhao" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
+            </div>
+             <div class="navigation-link">
+            <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
+       </div>
+        </div>
+       
+    </div> <!-- Fim .container -->
+
+    <script src="garagem_script.js" defer></script>
+    <script>
+        // Script JS para controle de telas
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.tela').forEach(tela => tela.style.display = 'none');
+            const telaInicial = document.getElementById('telaPrincipal');
+            if (telaInicial) {
+                telaInicial.style.display = 'block';
+                telaInicial.classList.add('tela-ativa');
+            }
+            // Adapte a lógica de navegação
+        });
+    </script>
+</body>
+</html>

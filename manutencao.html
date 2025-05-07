@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Garagem Inteligente Unificada</title> <!-- Título atualizado -->
+    <meta charset="UTF-8"> <!-- Garante a codificação correta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para responsividade -->
+    <link rel="stylesheet" href="style.css"> <!-- Link para o CSS correto -->
+    <!-- Adiciona o CSS do Flatpickr (Datepicker) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Estilos específicos podem permanecer aqui ou serem movidos para style.css -->
+    <style>
+        /* Se houver estilos específicos que não estavam no style.css,
+           mantenha-os aqui ou mova-os para style.css */
+
+        /* Estilos ADICIONAIS para o botão de navegação (SE VOCÊ QUISER MANTÊ-LO POR ALGUM MOTIVO) /* Cinza */
+        .botao-navegacao {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 15px 0;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .botao-navegacao:hover {
+            background-color: #5a6268;
+        } */
+    </style>
+</head>
+<body>
+
+    <h1>Garagem Inteligente Unificada</h1> <!-- Título principal -->
+
+    <!-- REMOVIDO o botão de voltar para garagem.HTML -->
+    <!-- <a href="garagem.HTML" class="botao-navegacao">⬅️ Voltar ao Simulador Simples</a> -->
+    <!-- <hr> --> <!-- Pode remover ou manter a linha -->
+
+
+    <div id="notificacoes"></div> <!-- Para alertas e notificações -->
+
+    <!-- Seção para Adicionar Veículos -->
+      <!-- BOTÃO DE NAVEGAÇÃO ADICIONADO AQUI -->
+      <a href="garagem.HTML" class="botao-navegacao">⬅️ Voltar ao Simulador Simples</a>
+       <!-- BOTÃO DE NAVEGAÇÃO PARA PREVISÃO DO TEMPO -->
+            <a href="previsao_tempo.html" class="botao-navegacao" style="margin-left: 10px; background-color: #1abc9c;">☀️ Ver Previsão do Tempo Detalhada</a>
+      <hr> <!-- Linha opcional para separar -->
+
+          
+ 
+    <div class="form-section">
+        <h3><span role="img" aria-label="Sinal de Mais">➕</span> Adicionar Novo Veículo</h3>
+        <form id="formAdicionarVeiculo">
+            <label for="tipoVeiculo">Tipo:</label>
+            <select id="tipoVeiculo" required>
+                <option value="" disabled selected>Selecione o tipo</option>
+                <option value="Carro">Carro</option>
+                <option value="CarroEsportivo">Carro Esportivo</option>
+                <option value="Caminhao">Caminhão</option>
+            </select>
+
+            <label for="modeloVeiculo">Modelo:</label>
+            <input type="text" id="modeloVeiculo" placeholder="Ex: Fusca, Ferrari, Scania" required>
+
+            <label for="corVeiculo">Cor:</label>
+            <input type="text" id="corVeiculo" placeholder="Ex: Azul, Vermelho, Prata" required>
+
+            <!-- Campos específicos -->
+            <div id="campoCapacidadeCarga" style="display: none;">
+                <label for="capacidadeCargaVeiculo">Capacidade de Carga (kg):</label>
+                <input type="number" id="capacidadeCargaVeiculo" min="0" placeholder="Ex: 10000">
+            </div>
+
+            <button type="submit">Adicionar à Garagem</button>
+        </form>
+    </div>
+
+    <!-- Seção da Garagem (Lista de Veículos) -->
+    <div class="list-section">
+        <h2><span role="img" aria-label="Garagem">🏢</span> Garagem</h2>
+        <div id="listaVeiculos">
+            <!-- Veículos serão listados aqui dinamicamente -->
+            <p>Carregando veículos...</p>
+        </div>
+    </div>
+
+     <!-- Seção de Agendamentos Futuros -->
+     <div class="list-section">
+        <h3><span role="img" aria-label="Calendário">📅</span> Agendamentos Futuros</h3>
+        <div id="listaAgendamentosFuturos">
+            <!-- Agendamentos futuros serão listados aqui -->
+            <p>Nenhum agendamento futuro encontrado.</p>
+        </div>
+    </div>
+
+
+    <!-- Modal para Detalhes do Veículo e Manutenção -->
+    <div id="modalDetalhesVeiculo" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="fecharModal()">×</span>
+            <h2 id="modalTituloVeiculo">Detalhes do Veículo</h2>
+
+            <!-- Informações do Veículo -->
+            <div id="modalInfoVeiculo" class="info-veiculo">
+                <!-- Detalhes do veículo serão inseridos aqui -->
+            </div>
+            <!-- Botões de Ação -->
+            <div class="actions" id="modalAcoesVeiculo">
+                 <!-- Botões de ação (Ligar, Acelerar, etc.) serão adicionados aqui -->
+                 <p>Ações disponíveis aparecerão aqui.</p>
+            </div>
+
+             <!-- Seção de Histórico de Manutenção -->
+             <div class="list-section">
+                <h3><span role="img" aria-label="Ferramenta">🔧</span> Histórico e Agendamentos do Veículo</h3>
+                <div id="modalHistoricoManutencao">
+                    <!-- Histórico e agendamentos do veículo específico serão listados aqui -->
+                    <p>Nenhum registro de manutenção para este veículo.</p>
+                </div>
+            </div>
+
+
+            <!-- Formulário para Agendar/Adicionar Manutenção -->
+            <div class="form-section">
+                <h3 id="modalFormManutencaoTitulo"><span role="img" aria-label="Sinal de Mais">➕</span> Registrar Nova Manutenção/Agendamento</h3>
+                <form id="formManutencao">
+                     <input type="hidden" id="manutencaoVeiculoId"> <!-- Para saber qual veículo -->
+
+                    <label for="manutencaoData">Data e Hora:</label>
+                    <!-- Usando input text para o flatpickr controlar melhor -->
+                    <input type="text" id="manutencaoData" placeholder="Selecione data e hora..." required>
+
+                    <label for="manutencaoTipo">Tipo de Serviço:</label>
+                    <input type="text" id="manutencaoTipo" placeholder="Ex: Troca de óleo, Revisão de freios" required>
+
+                    <label for="manutencaoCusto">Custo (R$):</label>
+                    <input type="number" id="manutencaoCusto" min="0" step="0.01" placeholder="Ex: 150.00" required>
+
+                    <label for="manutencaoDescricao">Descrição (Opcional):</label>
+                    <textarea id="manutencaoDescricao" rows="3" placeholder="Detalhes adicionais do serviço..."></textarea>
+
+                    <button type="submit">Salvar Manutenção</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Adiciona o JS do Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Adiciona o JS do Flatpickr para Português -->
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+
+    <!-- Seus scripts -->
+    <script src="Manutencao.js" defer></script>
+    <script src="Veiculo.js" defer></script>
+    <script src="Carro.js" defer></script>
+    <script src="CarroEsportivo.js" defer></script>
+    <script src="Caminhao.js" defer></script>
+    <script src="script.js" defer></script>
+
+</body>
+</html>
