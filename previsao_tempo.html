@@ -3,215 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garagem Hiperconectada - Previsão do Tempo</title>
-    <!-- Link para o SEU style.css existente -->
-    <link rel="stylesheet" href="style.css">
-    <!-- Adicione o CSS específico da previsão, se necessário, ou integre-o ao seu style.css -->
+    <title>Garagem Hiperconectada - Previsão do Tempo Criativa</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css"> <!-- Seu style.css principal -->
     <style>
-        /* ESTILOS ESPECÍFICOS PARA PREVISÃO DO TEMPO (se não estiverem no style.css principal) */
-        /* Cole aqui os estilos da previsão que te passei, como .container-previsao-dias, .dia-previsao-item, etc. */
-        /* Ou, melhor ainda, adicione-os diretamente ao seu style.css */
-        #previsao-tempo-page-container { /* Novo container para a página de previsão */
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        /* === ESTILOS CRIATIVOS PARA PREVISÃO DO TEMPO === */
+        /* Coloque estes estilos diretamente no seu style.css principal ou mantenha aqui temporariamente */
+
+        :root {
+            --font-principal: 'Poppins', sans-serif;
+            --font-secundaria: 'Roboto Condensed', sans-serif;
+
+            --cor-primaria: #3498db; /* Azul principal */
+            --cor-secundaria: #2980b9; /* Azul escuro */
+            --cor-texto: #34495e; /* Cinza ardósia */
+            --cor-texto-claro: #7f8c8d; /* Cinza mais claro */
+            --cor-fundo: #f0f4f8; /* Azul acinzentado bem claro */
+            --cor-card: #ffffff;
+            --cor-sombra: rgba(0, 0, 0, 0.08);
+
+            --cor-sol: #f1c40f;
+            --cor-nuvem: #bdc3c7;
+            --cor-chuva: #3498db;
+            --cor-neve: #ecf0f1;
+            --cor-tempestade: #8e44ad; /* Roxo */
+
+            --cor-temp-max: #e74c3c; /* Vermelho */
+            --cor-temp-min: #3498db; /* Azul */
+        }
+
+        body.previsao-page { /* Adicionar essa classe ao body no HTML ou no JS */
+            font-family: var(--font-principal);
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Gradiente suave */
+            color: var(--cor-texto);
+            line-height: 1.7;
+        }
+
+        #previsao-tempo-page-container {
+            max-width: 1000px; /* Um pouco mais largo */
+            margin: 30px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9); /* Fundo branco levemente translúcido */
+            backdrop-filter: blur(5px); /* Efeito de vidro fosco se o fundo for gradiente */
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 var(--cor-sombra);
         }
 
         #previsao-tempo-page-container header h1 {
-            color: #3498db; /* Ajuste para combinar com seu estilo se necessário */
+            font-family: var(--font-secundaria);
+            font-weight: 700;
+            font-size: 2.8em;
+            color: var(--cor-secundaria);
+            text-align: center;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+        #previsao-tempo-page-container header p {
+            text-align: center;
+            font-size: 1.15em;
+            color: var(--cor-texto-claro);
+            margin-bottom: 30px;
         }
 
         #busca-clima {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin-bottom: 30px;
             align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px var(--cor-sombra);
         }
 
         #cidade-input {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1em; /* Consistência */
+            padding: 14px 18px;
+            border: 1px solid #d1d8e0;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: var(--font-principal);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #cidade-input:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         #verificar-clima-btn {
-            padding: 10px 15px; /* Consistência com seus botões */
-            /* A cor já deve vir do seu style.css geral para botões */
+            padding: 14px 25px;
+            background-color: var(--cor-primaria);
+            color: white;
+            font-weight: 500;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            font-family: var(--font-principal);
+        }
+        #verificar-clima-btn:hover {
+            background-color: var(--cor-secundaria);
+        }
+         #verificar-clima-btn:active {
+            transform: translateY(1px);
         }
 
-        #loading {
-            text-align: center;
-            margin: 20px;
-            font-style: italic;
-            color: #555;
+
+        /* SPINNER DE CARREGAMENTO */
+        .loader-container { display: none; text-align: center; margin: 40px 0; }
+        .loader {
+            border: 6px solid #eaf0f6;
+            border-top: 6px solid var(--cor-primaria);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
         }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         #error-message {
-            background-color: #ffebee;
-            color: #c62828;
-            padding: 10px;
-            border-radius: 4px;
-            margin: 10px 0 20px 0; /* Adicionado margin bottom */
-            border: 1px solid #ef9a9a;
+            background-color: #fff0f0; /* Rosa claro */
+            color: #c0392b; /* Vermelho escuro */
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 20px 0 25px 0;
+            border: 1px solid #e74c3c;
             text-align: center;
+            font-weight: 500;
+            display: none;
         }
 
         #previsao-tempo-resultado h2 {
-            color: #2c3e50;
-            margin-bottom: 15px;
+            font-family: var(--font-secundaria);
+            font-weight: 700;
+            font-size: 1.8em;
+            color: var(--cor-texto);
+            margin-bottom: 25px;
             text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            border-bottom: none; /* Remover borda e adicionar espaçamento */
+            padding-bottom: 0;
+        }
+         #previsao-tempo-resultado h2 .nome-cidade {
+            color: var(--cor-primaria);
+            font-weight: bold;
         }
 
+
         .container-previsao-dias {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 25px; /* Maior espaçamento */
         }
 
         .dia-previsao-item {
-            background-color: #000000;
-            border: 1px solid #bdc3c7;
-            border-radius: 6px;
-            padding: 15px;
+            background-color: var(--cor-card);
+            border: 1px solid #e7e9ec;
+            border-radius: 10px; /* Bordas mais arredondadas */
+            padding: 20px;
             text-align: center;
-            min-width: 130px;
-            flex: 1;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 5px 20px var(--cor-sombra);
+            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            overflow: hidden; /* Para efeitos de background */
+            position: relative;
         }
-        .dia-previsao-item:hover {
-            transform: translateY(-5px);
-        }
+         /* Efeito de gradiente animado no hover (opcional, pode ser pesado)
+        .dia-previsao-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 0;
+        } */
 
-        .dia-previsao-item h3 {
+        .dia-previsao-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        /* .dia-previsao-item:hover::before { opacity: 0.1; } */
+
+
+        .dia-previsao-item h3 { /* Nome do dia da semana */
             margin-top: 0;
             font-size: 1.1em;
-            color: #ffffff;
+            font-weight: 600;
+            color: var(--cor-texto);
+            margin-bottom: 8px;
+            position: relative; z-index: 1;
         }
+         .dia-previsao-item .data-curta { /* Data DD/MM */
+            font-size: 0.85em;
+            color: var(--cor-texto-claro);
+            margin-bottom: 15px;
+            display: block;
+            position: relative; z-index: 1;
+         }
 
-        .dia-previsao-item img {
-            width: 50px;
-            height: 50px;
-            margin: 5px 0;
+        .dia-previsao-item img.weather-icon-daily {
+            width: 70px; /* Ícone maior */
+            height: 70px;
+            margin: 0 auto 10px auto;
+            display: block;
+            position: relative; z-index: 1;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.15)); /* Sombra no ícone */
         }
 
         .dia-previsao-item .temperaturas {
             font-size: 1.2em;
-            font-weight: bold;
-            margin: 5px 0;
+            font-weight: 500;
+            margin: 15px 0;
+            position: relative; z-index: 1;
         }
         .dia-previsao-item .temp-max {
-            color: #ff5947;
+            color: var(--cor-temp-max);
+            font-weight: 700;
         }
         .dia-previsao-item .temp-min {
-            color: #89d0ff;
+            color: var(--cor-temp-min);
+            font-weight: 700;
         }
         .dia-previsao-item .descricao-tempo {
-            font-size: 0.9em;
-            color: #7f8c8d;
+            font-size: 0.95em;
+            color: var(--cor-texto-claro);
             text-transform: capitalize;
-            min-height: 30px; /* Para evitar que o card mude de altura com descrições diferentes */
+            min-height: 38px; /* Para consistência de altura */
+            margin-top: 10px;
+            font-weight: 500;
+            position: relative; z-index: 1;
         }
 
-        #conselhos-garagem {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+        /* Estilos do Modal Criativo */
+        .modal { display: none; /* ... mantidos */ }
+        .modal-content {
+            background-color: #fdfdfd; /* Fundo quase branco */
+            margin: 8% auto; /* Mais margem no topo */
+            padding: 30px 35px; /* Mais padding */
+            border: none; /* Remover borda padrão */
+            width: 90%;
+            max-width: 750px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: modalOpen 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); /* Animação de abertura */
+        }
+        @keyframes modalOpen {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        #conselhos-garagem h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            text-align: center;
+        .modal-header {
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
-        #conselhos-garagem ul {
-            list-style-type: none;
-            padding-left: 0;
+        .modal-header h2 {
+            margin: 0;
+            color: var(--cor-secundaria);
+            font-size: 1.6em;
+            font-family: var(--font-secundaria);
         }
-
-        #conselhos-garagem li {
-            background-color: #e8f6fd;
-            border-left: 4px solid #3498db;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 0 4px 4px 0;
-        }
-
-        footer { /* Para manter o estilo do rodapé da página de previsão */
-            text-align: center;
-            font-size: 0.9em;
-            color: #777;
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-
-        .botao-navegacao { /* Pega do seu CSS se estiver lá, senão define aqui */
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 15px 0;
-            background-color: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
+        .close-button {
+            color: #999;
+            font-size: 32px; /* Um pouco maior */
+            font-weight: bold;
             cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .close-button:hover { color: var(--cor-primaria); }
+
+        #previsao-horaria-container {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 20px; /* Para scrollbar mais estilizado (pode requerer JS/Webkit) */
+            gap: 20px; /* Espaço entre itens */
+            margin: 0 -15px; /* Truque para o padding do container não afetar o primeiro/último filho */
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        /* Scrollbar customizada (Webkit browsers) */
+        #previsao-horaria-container::-webkit-scrollbar { height: 8px; }
+        #previsao-horaria-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #previsao-horaria-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        #previsao-horaria-container::-webkit-scrollbar-thumb:hover { background: #aaa; }
+
+
+        .item-previsao-horaria {
+            min-width: 130px;
+            padding: 18px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .item-previsao-horaria:hover {
+            transform: translateY(-3px);
+        }
+
+        .item-previsao-horaria p { margin: 6px 0; font-size: 0.9em; color: var(--cor-texto-claro); }
+        .item-previsao-horaria img { width: 55px; height: 55px; margin-bottom: 5px; }
+        .item-previsao-horaria .hora {
+            font-weight: 600;
+            color: var(--cor-primaria);
             font-size: 1em;
         }
-        .botao-navegacao:hover {
-            background-color: #5a6268;
+        .item-previsao-horaria .temp {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #28a745;
         }
+         .item-previsao-horaria .desc-horaria {
+            font-size: 0.85em;
+            text-transform: capitalize;
+         }
+
+        #conselhos-garagem { margin-top: 40px; padding-top: 25px; border-top: 1px solid #e0e7ff; }
+        #conselhos-garagem h3 { color: var(--cor-secundaria); font-family: var(--font-secundaria); text-align: left; font-size: 1.5em; }
+        #conselhos-garagem ul { list-style-type: none; padding-left: 0; }
+        #conselhos-garagem li {
+            background-color: #eaf4ff; /* Azul muito claro */
+            border-left: 5px solid var(--cor-primaria);
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 1em;
+            color: var(--cor-texto);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+        }
+        #conselhos-garagem li span[role="img"] { margin-right: 10px; }
+
+
+        .botao-navegacao {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 0 0 25px 0;
+            background-color: var(--cor-secundaria);
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+            font-family: var(--font-principal);
+        }
+        .botao-navegacao:hover { background-color: #1f639b; }
+
+        footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: var(--cor-texto-claro);
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e7ff;
+        }
+        footer strong { color: var(--cor-texto); }
+
+
+        /* Classes condicionais para ícones (a serem adicionadas via JS) */
+        .weather-icon-daily.sol, .weather-icon-horaria.sol { /* Ícones ensolarados */
+             /* filter: drop-shadow(0 0 5px var(--cor-sol)); Poderia adicionar um brilho */
+        }
+        .weather-icon-daily.chuva, .weather-icon-horaria.chuva { /* Ícones de chuva */
+            /*  Exemplo: filter: hue-rotate(180deg) saturate(2);  */
+        }
+        /* ... mais classes para outros tipos de tempo ... */
+
 
     </style>
 </head>
-<body>
+<body class="previsao-page"> <!-- Adicionada classe para aplicar o body específico -->
     <div id="previsao-tempo-page-container">
+        <a href="manutencao.html" class="botao-navegacao">⬅️ Voltar ao Gerenciamento</a>
         <header>
-            <!-- BOTÃO DE NAVEGAÇÃO para voltar para a página principal de gerenciamento -->
-            <a href="garagem.HTML" class="botao-navegacao">⬅️ Voltar ao Gerenciamento de Veículos</a>
-
-      
-            <hr>
-            <h1>Garagem Hiperconectada: Previsão do Tempo</h1>
-            <p>Planeje suas atividades e viagens com a previsão do tempo detalhada!</p>
+            <h1>Previsão do Tempo Detalhada</h1>
+            <p>Planeje com precisão, para cada dia e cada hora!</p>
         </header>
 
         <main>
             <section id="busca-clima">
                 <input type="text" id="cidade-input" placeholder="Digite o nome da cidade">
-                <button id="verificar-clima-btn" class="button">Ver Previsão (3 Dias)</button>
+                <button id="verificar-clima-btn">Ver Previsão</button>
             </section>
 
-            <div id="loading" style="display:none;">Carregando...</div>
-            <div id="error-message" style="display:none;"></div>
+            <div class="loader-container" id="loading-spinner">
+                <div class="loader"></div>
+            </div>
+            <div id="error-message" style="display:none;"></div> <!-- Mantido oculto por JS -->
 
             <section id="previsao-tempo-resultado">
-                <!-- Resultados da previsão serão inseridos aqui -->
+                <!-- Resultados da previsão diária serão inseridos aqui -->
             </section>
 
             <section id="conselhos-garagem">
-                <!-- Conselhos da garagem serão inseridos aqui -->
+                <!-- Conselhos da garagem -->
             </section>
         </main>
 
         <footer>
-            <p>Previsão do tempo fornecida por OpenWeatherMap</p>
-            <p style="font-size: 0.8em; color: #777;">
-                <strong>Atenção:</strong> A chave da API OpenWeatherMap está no código frontend para fins didáticos.
-                Em um ambiente de produção, isso NUNCA deve ser feito. Use um backend como proxy.
+            <p>Previsão do tempo por OpenWeatherMap</p>
+            <p style="font-size: 0.8em;">
+                <strong>Atenção:</strong> API Key no frontend apenas para fins didáticos.
             </p>
         </footer>
-    </div> <!-- Fim de #previsao-tempo-page-container -->
+    </div>
 
-    <!-- Script da previsão do tempo -->
+    <!-- Modal para Previsão Horária -->
+    <div id="modal-previsao-horaria" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo-data">Previsão Horária</h2>
+                <span class="close-button" id="fechar-modal-btn">×</span>
+            </div>
+            <div id="previsao-horaria-container">
+                <!-- Previsão de 3 em 3 horas será inserida aqui -->
+            </div>
+        </div>
+    </div>
+
     <script src="previsao_tempo_script.js"></script>
 </body>
 </html>
