@@ -1,8 +1,8 @@
 // previsao_tempo_script.js
 
 // --- 1. CONSTANTES E CONFIGURAÇÕES ---
-const apiKey = "ad58e4c3d5c1b176fdadd90ac40c9541"; // SUA CHAVE AQUI
-const forecastApiUrlBase = "https://api.openweathermap.org/data/2.5/forecast";
+//const apiKey = "ad58e4c3d5c1b176fdadd90ac40c9541"; // SUA CHAVE AQUI
+//const forecastApiUrlBase = "https://api.openweathermap.org/data/2.5/forecast";
 
 // --- 2. SELETORES DO DOM ---
 // (Os seletores permanecem os mesmos da sua última versão, apenas garantindo que estão corretos)
@@ -18,7 +18,40 @@ const modalTituloData = document.getElementById('modal-titulo-data');
 const modalPrevisaoHorariaContainer = document.getElementById('previsao-horaria-container');
 const fecharModalBtn = document.getElementById('fechar-modal-btn');
 
+
+
 let dadosCompletosDaApi = null;
+
+// --- 4. FUNÇÃO DE CHAMADA À API --- (MODIFICADA)
+async function buscarPrevisaoDetalhada(cidade) {
+    // URL do seu backend. Certifique-se que a porta (3001) é a mesma do seu server.js
+    // Para deploy, esta URL precisará ser a URL pública do seu backend.
+    const backendUrl = `http://localhost:3001/api/previsao/${encodeURIComponent(cidade)}`;
+
+    console.log(`[Frontend] Solicitando previsão para: ${cidade} via backend em ${backendUrl}`);
+
+    try {
+        const response = await fetch(backendUrl);
+
+        if (!response.ok) {
+            let errorData = { message: `Erro HTTP ${response.status} ao buscar previsão no backend.` };
+            try {
+                // Tenta pegar a mensagem de erro específica do seu backend
+                errorData = await response.json();
+            } catch (jsonError) {
+                console.warn("[Frontend] Não foi possível parsear o JSON da resposta de erro do backend.", jsonError);
+            }
+            // Usa a mensagem de erro do backend (errorData.error) ou uma mensagem genérica
+            throw new Error(errorData.error || errorData.message || `Erro ${response.status} na comunicação com o servidor.`);
+        }
+        dadosCompletosDaApi = await response.json(); // Recebe os dados da API OpenWeatherMap via seu backend
+        return dadosCompletosDaApi;
+    } catch (error) {
+        console.error("[Frontend] Erro ao buscar previsão detalhada do backend:", error);
+        dadosCompletosDaApi = null;
+        throw error;
+    }
+}
 
 // --- 3. FUNÇÕES UTILITÁRIAS DE UI ---
 function toggleLoading(mostrar) {
@@ -38,22 +71,48 @@ function limparErro() {
 }
 
 // --- 4. FUNÇÃO DE CHAMADA À API --- (sem alterações)
+
+
 async function buscarPrevisaoDetalhada(cidade) {
-    const url = `${forecastApiUrlBase}?q=${encodeURIComponent(cidade)}&appid=${apiKey}&units=metric&lang=pt_br`;
+    // A URL AGORA APONTA PARA O SEU SERVIDOR BACKEND
+    // Certifique-se que a porta (ex: 3001) é a mesma que seu server.js está escutando.
+    // Se você fizer deploy do backend, esta URL precisará ser a URL pública do seu backend.
+    const backendUrl = `http://localhost:3001/api/previsao/${encodeURIComponent(cidade)}`;
+
+    console.log(`[Frontend] Solicitando previsão para: ${cidade} via backend em ${backendUrl}`);
+
     try {
-        const response = await fetch(url);
+        const response = await fetch(backendUrl); // <- MUDANÇA AQUI: usando backendUrl
+
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: response.statusText }));
-            throw new Error(`Erro ${response.status}: ${errorData.message || 'Não foi possível buscar os dados.'}`);
+            // A requisição para o nosso backend não foi bem-sucedida (ex: erro 4xx, 5xx do backend)
+            let errorData = { message: `Erro HTTP ${response.status} ao buscar previsão no backend.` }; // Mensagem padrão
+            try {
+                // Tenta parsear a resposta JSON do backend para obter uma mensagem de erro mais específica.
+                // Nosso backend foi configurado para enviar erros como { error: "mensagem..." }
+                errorData = await response.json();
+            } catch (jsonError) {
+                // Se a resposta de erro do backend não for um JSON válido, ou não houver corpo na resposta.
+                console.warn("[Frontend] Não foi possível parsear o JSON da resposta de erro do backend.", jsonError);
+            }
+            // Usa a mensagem de erro do objeto `errorData` (se houver a propriedade `error` ou `message`),
+            // ou a mensagem padrão definida acima.
+            throw new Error(errorData.error || errorData.message || `Erro ${response.status} na comunicação com o servidor.`);
         }
-        dadosCompletosDaApi = await response.json();
+
+        // Se a requisição foi bem-sucedida (status 2xx)
+        dadosCompletosDaApi = await response.json(); // O corpo da resposta do nosso backend é o JSON da OpenWeatherMap
         return dadosCompletosDaApi;
+
     } catch (error) {
-        console.error("Erro ao buscar previsão detalhada:", error);
-        dadosCompletosDaApi = null;
-        throw error;
+        // Este catch pega erros de rede (fetch falhou em conectar),
+        // ou os erros que nós mesmos lançamos no bloco `if (!response.ok)` acima.
+        console.error("[Frontend] Erro ao buscar previsão detalhada do backend:", error);
+        dadosCompletosDaApi = null; // Reseta a variável em caso de erro
+        throw error; // Re-lança o erro para que a função chamadora (handleVerificarClima) possa tratá-lo
     }
 }
+
 
 // --- 5. FUNÇÃO DE PROCESSAMENTO DE DADOS DIÁRIOS --- (sem alterações na lógica principal)
 function processarDadosForecastDiario(dataApi) {
