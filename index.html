@@ -3,113 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Veículos - Clean</title>
-    <!-- Google Fonts (Opcional, ou use system fonts) -->
+    <title>Garagem Inteligente Unificada</title>
+
+    <!-- FONTES E ÍCONES -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Ícones (Font Awesome - Opcional, para simplicidade) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Nosso CSS Estilizado -->
-    <link rel="stylesheet" href="garagem.css">
+    
+    <!-- CSS (Bibliotecas e o seu principal) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- ==================================================================== -->
+    <!-- =================== ELEMENTOS GLOBAIS (FORA DAS TELAS) =============== -->
+    <!-- ==================================================================== -->
+    
+    <!-- Div para notificações que aparece em cima de tudo -->
+    <div id="notificacoes"></div>
+
+    <!-- Modal para Detalhes e Manutenção do Veículo -->
+    <div id="modalDetalhesVeiculo" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="fecharModal()">×</span>
+            <h2 id="modalTituloVeiculo">Detalhes do Veículo</h2>
+            <div id="modalInfoVeiculo" class="info-veiculo"></div>
+            <div class="actions" id="modalAcoesVeiculo"></div>
+            <div class="list-section">
+                <h3><i class="fas fa-wrench"></i> Histórico e Agendamentos</h3>
+                <div id="modalHistoricoManutencao"></div>
+            </div>
+            <div class="form-section">
+                <h3><i class="fas fa-calendar-plus"></i> Registrar/Agendar</h3>
+                <form id="formManutencao">
+                    <input type="hidden" id="manutencaoVeiculoId">
+                    <label for="manutencaoData">Data e Hora:</label>
+                    <input type="text" id="manutencaoData" placeholder="Selecione..." required>
+                    <label for="manutencaoDescricao">Descrição do Serviço:</label> <!-- Mudei o label para ser mais claro -->
+                    <input type="text" id="manutencaoDescricao" placeholder="Ex: Troca de óleo" required>
+                    <label for="manutencaoCusto">Custo (R$):</label>
+                    <input type="number" id="manutencaoCusto" min="0" step="0.01" placeholder="Ex: 150.00">
+                     <label for="manutencaoQuilometragem">Quilometragem (Opcional):</label> <!-- Novo campo -->
+                    <input type="number" id="manutencaoQuilometragem" min="0" placeholder="Ex: 50000">
+                    <button type="submit">Salvar Manutenção</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Previsão Horária -->
+    <div id="modal-previsao-horaria" class="modal">
+        <div class="modal-content">
+             <div class="modal-header">
+                <h2 id="modal-titulo-data">Previsão Horária</h2>
+                <span class="close-button" onclick="fecharModalPrevisao()">×</span>
+            </div>
+            <div id="previsao-horaria-container"></div>
+        </div>
+    </div>
+
+
+    <!-- ==================================================================== -->
+    <!-- ============ CONTAINER PRINCIPAL COM AS TELAS NAVEGÁVEIS ============= -->
+    <!-- ==================================================================== -->
     <div class="container">
-        <h1>Simulador de Veículos</h1>
 
-        <hr>
-
-        <div id="mensagem" class="message-area" style="display: none;"></div>
-
-        <!-- Tela Principal (Garagem) -->
-        <div id="telaPrincipal" class="tela tela-ativa">
-            <h2>Escolha um Veículo</h2>
-            <div class="button-group">
-                <button id="irParaCarro" class="button button-primary">Carro</button>
-                <button id="irParaEsportivo" class="button button-primary">Carro Esportivo</button>
-                <button id="irParaCaminhao" class="button button-primary">Caminhão</button>
-            </div>
+        <!-- TELA 1: SIMULADOR (Veio de garagem.HTML) -->
+        <div id="telaSimulador" class="tela tela-ativa">
+            <header class="page-header">
+                <h1>Simulador de Veículos</h1>
+                <p>Escolha um veículo para um test drive rápido.</p>
+            </header>
+            <main class="tela-content">
+                <div class="button-group">
+                    <button onclick="selecionarVeiculoSimulador('Carro')" class="button button-primary">Carro</button>
+                    <button onclick="selecionarVeiculoSimulador('CarroEsportivo')" class="button button-primary">Carro Esportivo</button>
+                    <button onclick="selecionarVeiculoSimulador('Caminhao')" class="button button-primary">Caminhão</button>
+                </div>
+                <div id="mensagem-simulador" class="message-area" style="display: none;"></div>
+                <div id="simulador-veiculo-container" class="sim-container"></div>
+            </main>
+            <footer class="tela-navigation">
+                <button onclick="mostrarTela('telaGerenciamento')" class="button button-success button-large"><i class="fas fa-garage"></i> Ir para a Garagem Completa</button>
+            </footer>
         </div>
 
-        <!-- Tela do Carro -->
-        <div id="telaCarro" class="tela">
-            <h2>Carro</h2>
-            <img src="img/images.jpg" alt="Imagem de um Carro" class="vehicle-image">
-            <div id="infoCarro" class="info-box">Status: Desligado</div>
-            <div class="button-group">
-                <button id="ligarCarro" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
-                <button id="desligarCarro" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
-                <button id="acelerarCarro" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
-                <button id="buzinarCarro" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
-                <div class="navigation-link">
-                    <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
-               </div>
-            </div>
-            <div class="button-group">
-                <button id="voltarParaGaragemCarro" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
-            </div>
+
+        <!-- TELA 2: GERENCIAMENTO DA GARAGEM (Veio de manutencao.html) -->
+        <div id="telaGerenciamento" class="tela">
+            <header class="page-header">
+                <button onclick="mostrarTela('telaSimulador')" class="nav-button-top-left"><i class="fas fa-arrow-left"></i> Voltar ao Simulador</button>
+                <h1>Garagem Inteligente Unificada</h1>
+            </header>
+            <main class="tela-content">
+                <div class="form-section">
+                    <h3><i class="fas fa-plus-circle"></i> Adicionar Novo Veículo</h3>
+                    <form id="formAdicionarVeiculo">
+                        <label for="tipoVeiculo">Tipo:</label>
+                        <select id="tipoVeiculo" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="Carro">Carro</option>
+                            <option value="CarroEsportivo">Carro Esportivo</option>
+                            <option value="Caminhao">Caminhão</option>
+                        </select>
+                        <label for="placaVeiculo">Placa:</label>
+                        <input type="text" id="placaVeiculo" placeholder="Ex: ABC1D23" required>
+                        <label for="modeloVeiculo">Modelo:</label>
+                        <input type="text" id="modeloVeiculo" placeholder="Ex: Fusca, Ferrari, Scania" required>
+                        <label for="corVeiculo">Cor:</label>
+                        <input type="text" id="corVeiculo" placeholder="Ex: Azul, Vermelho, Prata" required>
+                        <div id="campoCapacidadeCarga" style="display: none;">
+                            <label for="capacidadeCargaVeiculo">Capacidade de Carga (kg):</label>
+                            <input type="number" id="capacidadeCargaVeiculo" min="0" placeholder="Ex: 10000">
+                        </div>
+                        <button type="submit" class="button-add-special"><i class="fas fa-plus"></i> Adicionar à Garagem</button>
+                    </form>
+                </div>
+
+                <div class="list-section">
+                    <h2><i class="fas fa-warehouse"></i> Minha Garagem</h2>
+                    <div id="listaVeiculos"><p>Carregando veículos...</p></div>
+                </div>
+
+                <div class="list-section">
+                    <h3><i class="far fa-calendar-alt"></i> Agendamentos Futuros</h3>
+                    <div id="listaAgendamentosFuturos"><p>Nenhum agendamento futuro encontrado.</p></div>
+                </div>
+            </main>
+            <footer class="tela-navigation">
+                <button onclick="mostrarTela('telaPrevisaoTempo')" class="button button-large" style="background-color: #1abc9c;"><i class="fas fa-cloud-sun"></i> Ver Previsão do Tempo</button>
+            </footer>
+        </div>
+        
+        <!-- TELA 3: PREVISÃO DO TEMPO (Veio de previsao_tempo.html) -->
+        <div id="telaPrevisaoTempo" class="tela">
+             <header class="page-header">
+                 <button onclick="mostrarTela('telaGerenciamento')" class="nav-button-top-left"><i class="fas fa-arrow-left"></i> Voltar à Garagem</button>
+                 <h1>Previsão do Tempo</h1>
+                 <p>Planeje suas viagens e manutenções!</p>
+             </header>
+             <main class="tela-content">
+                <section id="busca-clima">
+                    <input type="text" id="cidade-input" placeholder="Digite o nome da cidade">
+                    <button id="verificar-clima-btn" class="button-weather-special"><i class="fas fa-search-location"></i> Ver Previsão</button>
+                </section>
+                <div class="loader-container" id="loading-spinner"><div class="loader"></div></div>
+                <div id="error-message" style="display:none;"></div>
+                <div id="previsao-tempo-resultado"></div>
+                <div id="conselhos-garagem"></div>
+            </main>
         </div>
 
-        <!-- Tela do Carro Esportivo -->
-        <div id="telaEsportivo" class="tela">
-            <h2>Carro Esportivo</h2>
-            <img src="img/png-transparent-ford-gt-shelby-mustang-california-special-mustang-2018-ford-mustang-gt-premium-ford-car-performance-car-vehicle.png" alt="Imagem de um Carro Esportivo" class="vehicle-image">
-            <div id="infoEsportivo" class="info-box">Status: Desligado</div>
-            <div class="button-group">
-                 <button id="ligarEsportivo" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
-                <button id="desligarEsportivo" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
-                <button id="acelerarEsportivo" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
-                <button id="buzinarEsportivo" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
-                <button id="ativarTurbo" class="button button-warning"><i class="fas fa-fire"></i> Ativar Turbo</button>
-                <button id="desativarTurbo" class="button button-secondary">Desativar Turbo</button>
-                <div class="navigation-link">
-                    <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
-               </div>
-            </div>
-             <div class="button-group">
-                <button id="voltarParaGaragemEsportivo" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
-            </div>
-        </div>
-
-        <!-- Tela do Caminhão -->
-        <div id="telaCaminhao" class="tela">
-            <h2>Caminhão</h2>
-            <img src="img/images%20(1).jpg" alt="Imagem de um Caminhão" class="vehicle-image">
-            <div id="infoCaminhao" class="info-box">Status: Desligado</div>
-             <div class="button-group">
-                 <button id="ligarCaminhao" class="button button-success"><i class="fas fa-play"></i> Ligar</button>
-                <button id="desligarCaminhao" class="button button-danger"><i class="fas fa-stop"></i> Desligar</button>
-                <button id="acelerarCaminhao" class="button button-primary"><i class="fas fa-forward"></i> Acelerar</button>
-                <button id="buzinarCaminhao" class="button button-primary"><i class="fas fa-volume-up"></i> Buzinar</button>
-            </div>
-            <div class="cargo-section">
-                <label for="pesoCarga">Peso da Carga (kg):</label>
-                <input type="number" id="pesoCarga" placeholder="0">
-                <button id="carregarCaminhao" class="button button-warning"><i class="fas fa-truck-loading"></i> Carregar</button>
-            </div>
-             <div class="button-group">
-                <button id="voltarParaGaragemCaminhao" class="button button-secondary"><i class="fas fa-arrow-left"></i> Voltar</button>
-            </div>
-             <div class="navigation-link">
-            <a href="manutencao.html" class="button button-secondary"><i class="fas fa-cog"></i> Ir para Manutenção</a>
-       </div>
-        </div>
-       
     </div> <!-- Fim .container -->
+    <!-- ========================================================== -->
 
-    <script src="garagem_script.js" defer></script>
-    <script>
-        // Script JS para controle de telas
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tela').forEach(tela => tela.style.display = 'none');
-            const telaInicial = document.getElementById('telaPrincipal');
-            if (telaInicial) {
-                telaInicial.style.display = 'block';
-                telaInicial.classList.add('tela-ativa');
-            }
-            // Adapte a lógica de navegação
-        });
-    </script>
+    <!-- SCRIPTS - CARREGADOS COMO MÓDULOS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr" type="module"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js" type="module"></script>
+    
+    <script src="Manutencao.js" type="module"></script>
+    <script src="Veiculo.js" type="module"></script>
+    <script src="Carro.js" type="module"></script>
+    <script src="CarroEsportivo.js" type="module"></script>
+    <script src="Caminhao.js" type="module"></script>
+    <script src="previsao_tempo_script.js" type="module"></script>
+    <script src="main.js" type="module"></script> <!-- Era script.js -->
+
 </body>
 </html>
